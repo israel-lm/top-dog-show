@@ -1,0 +1,25 @@
+{
+  "name": "top-dog-show",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/israel-lm/top-dog-show.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/israel-lm/top-dog-show/issues"
+  },
+  "homepage": "https://github.com/israel-lm/top-dog-show#readme",
+  "devDependencies": {
+    "express": "^5.1.0",
+    "typescript": "^5.8.3"
+  }
+}
