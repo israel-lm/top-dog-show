@@ -1,116 +1,111 @@
-import { RequestModel, ResponseData, ListRequestData} from "./base-models";
+import { RequestModel, ResponseData, ListRequestData } from "./base-models";
 
 export class ShowData {
-    hostId: string;
-    address: string;
-    startDate: Date;
-    endDate: Date;
+  hostId: string;
+  address: string;
+  startDate: Date;
+  endDate: Date;
 
-    constructor(
-        hostId: string,
-        address: string,
-        startDate: Date,
-        endDate: Date
-    ) {
-        this.hostId = hostId;
-        this.address = address;
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
+  constructor(hostId: string, address: string, startDate: Date, endDate: Date) {
+    this.hostId = hostId;
+    this.address = address;
+    this.startDate = startDate;
+    this.endDate = endDate;
+  }
 }
 
 export class CreateShowRequestModel extends RequestModel {
-    showData: ShowData;
+  showData: ShowData;
 
-    constructor(showData: ShowData) {
-        super();
-        this.showData = showData;
-    }
+  constructor(showData: ShowData) {
+    super();
+    this.showData = showData;
+  }
 }
 
 export class UpdateShowRequestModel extends RequestModel {
-    showData: ShowData;
+  showData: ShowData;
 
-    constructor(showData: ShowData) {
-        super();
-        this.showData = showData;
-    }
+  constructor(showData: ShowData) {
+    super();
+    this.showData = showData;
+  }
 }
 
 export class DeleteShowRequestModel extends RequestModel {
-    showId: string;
+  showId: string;
 
-    constructor(showId: string) {
-        super();
-        this.showId = showId;
-    }
+  constructor(showId: string) {
+    super();
+    this.showId = showId;
+  }
 }
 
 export class GetShowRequestModel extends RequestModel {
-    showId: string;
+  showId: string;
 
-    constructor(showId: string) {
-        super();
-        this.showId = showId;
-    }
+  constructor(showId: string) {
+    super();
+    this.showId = showId;
+  }
 }
 
 export class ListShowsRequestModel extends RequestModel {
-    listData: ListRequestData;
+  listData: ListRequestData;
 
-    constructor(listData: ListRequestData) {
-        super();
-        this.listData = listData;
-    }
+  constructor(listData: ListRequestData) {
+    super();
+    this.listData = listData;
+  }
 }
 
 export class RegisterDogRequestModel extends RequestModel {
-    dogId: string;
-    showId: string;
-    registerUnregister: boolean;
+  dogId: string;
+  showId: string;
+  registerUnregister: boolean;
 
-    constructor(dogId: string, showId: string, registerUnregister: boolean) {
-        super();
-        this.dogId = dogId; 
-        this.showId = showId; 
-        this.registerUnregister = registerUnregister; 
-    }
+  constructor(dogId: string, showId: string, registerUnregister: boolean) {
+    super();
+    this.dogId = dogId;
+    this.showId = showId;
+    this.registerUnregister = registerUnregister;
+  }
 }
 
 export class CreateShowResponseData extends ResponseData {
-    showId: string;
+  showId: string;
 
-    constructor(showId: string) {
-        super();
-        this.showId = showId;
-    }
-} 
+  constructor(showId: string) {
+    super();
+    this.showId = showId;
+  }
+}
 
 export class UpdateShowResponseData extends ResponseData {
-    showId: string;
+  showId: string;
 
-    constructor(showId: string) {
-        super();
-        this.showId = showId;
-    }
+  constructor(showId: string) {
+    super();
+    this.showId = showId;
+  }
 }
 
 export class GetShowResponseData extends ResponseData {
-    showData: ShowData;
+  showData: ShowData;
 
-    constructor(showData: ShowData) {
-        super();
-        this.showData = showData;
-    }
+  constructor(showData: ShowData) {
+    super();
+    this.showData = showData;
+  }
 }
 
 export class ListUsersResponseData extends ResponseData {
-    items: ShowData[];
-    total: number;
+  items: ShowData[];
+  total: number;
 
-    constructor(items: ShowData[], total: number) {
-        super();
-        this.items = items;
-        this.total = total;
-    }
+  constructor(items: ShowData[], total: number) {
+    super();
+    this.items = items;
+    this.total = total;
+  }
 }

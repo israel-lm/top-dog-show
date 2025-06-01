@@ -1,42 +1,41 @@
-import { RequestModel, ResponseData} from "./base-models";
-
+import { RequestModel, ResponseData } from "./base-models";
 
 export class LoginRequestModel extends RequestModel {
-    userId: string;
-    password: string;
+  userId: string;
+  password: string;
 
-    constructor(userId: string, password: string) {
-        super();
-        this.userId = userId;
-        this.password = password;
-    }
+  constructor(userId: string, password: string) {
+    super();
+    this.userId = userId;
+    this.password = password;
+  }
 }
 
 export class LogoutRequestModel extends RequestModel {
-    refreshToken: string;
+  refreshToken: string;
 
-    constructor(refreshToken: string) {
-        super();
-        this.refreshToken = refreshToken;
-    }
+  constructor(refreshToken: string) {
+    super();
+    this.refreshToken = refreshToken;
+  }
 }
 
 export class ForgotPasswordRequestModel extends RequestModel {
-    email: string;
+  email: string;
 
-    constructor(email: string) {
-        super();
-        this.email = email;
-    }
+  constructor(email: string) {
+    super();
+    this.email = email;
+  }
 }
 
 export class RefreshTokenRequestModel extends RequestModel {
-    refreshToken: string;
+  refreshToken: string;
 
-    constructor(refreshToken: string) {
-        super();
-        this.refreshToken = refreshToken;
-    }
+  constructor(refreshToken: string) {
+    super();
+    this.refreshToken = refreshToken;
+  }
 }
 
 /*
@@ -53,29 +52,28 @@ export class FirstAccessRequestModel extends RequestModel {
     }
 }*/
 
-
 export class LoginResponseData extends ResponseData {
-    accessToken: string;
-    refreshToken: string;
-    expiresIn: number;
-    userId: string;
+  accessToken: string;
+  refreshToken: string;
+  expiresIn: number;
+  userId: string;
 
-    constructor(accessToken: string, refreshToken: string, expiresIn: number,userId: string) {
-        super();
-        this.accessToken = accessToken;
-        this.expiresIn = expiresIn;
-        this.refreshToken = refreshToken;
-        this.userId = userId;
-    }
+  constructor(accessToken: string, refreshToken: string, expiresIn: number, userId: string) {
+    super();
+    this.accessToken = accessToken;
+    this.expiresIn = expiresIn;
+    this.refreshToken = refreshToken;
+    this.userId = userId;
+  }
 }
 
 export class RefreshTokenResponseData extends ResponseData {
-    accessToken: string;
-    expiresIn: number;
+  accessToken: string;
+  expiresIn: number;
 
-    constructor(accessToken: string, expiresIn: number) {
-        super();
-        this.accessToken = accessToken;
-        this.expiresIn = expiresIn;
-    }
+  constructor(accessToken: string, expiresIn: number) {
+    super();
+    this.accessToken = accessToken;
+    this.expiresIn = expiresIn;
+  }
 }
