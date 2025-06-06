@@ -6,10 +6,10 @@ export class RankPositionData {
   dogName: string;
   points: number;
 
-  constructor(position: number, dogName: string, points: number) {
-    this.position = position;
-    this.dogName = dogName;
-    this.points = points;
+  constructor(data: any) {
+    this.position = data.position;
+    this.dogName = data.dogName;
+    this.points = data.points;
   }
 }
 
@@ -18,10 +18,10 @@ export class RankData {
   showId: string;
   ranking: RankPositionData[];
 
-  constructor(rankType: RankType, showId: string, ranking: RankPositionData[]) {
-    this.rankType = rankType;
-    this.showId = showId;
-    this.ranking = ranking;
+  constructor(data: any) {
+    this.rankType = data.rankType;
+    this.showId = data.showId;
+    this.ranking = data.ranking;
   }
 }
 
@@ -30,10 +30,10 @@ export class MarkData {
   attempts: number;
   success: boolean;
 
-  constructor(mark: number, attempts: number, success: boolean) {
-    this.mark = mark;
-    this.attempts = attempts;
-    this.success = success;
+  constructor(data: any) {
+    this.mark = data.mark;
+    this.attempts = data.attempts;
+    this.success = data.success;
   }
 }
 
@@ -45,20 +45,13 @@ export class DisciplineData {
   duration: number;
   marks: MarkData[];
 
-  constructor(
-    disciplineId: string,
-    disciplineType: DisciplineType,
-    dogId: string,
-    showId: string,
-    duration: number,
-    marks: MarkData[],
-  ) {
-    this.disciplineId = disciplineId;
-    this.disciplineType = disciplineType;
-    this.dogId = dogId;
-    this.showId = showId;
-    this.duration = duration;
-    this.marks = marks;
+  constructor(data: any) {
+    this.disciplineId = data.disciplineId;
+    this.disciplineType = data.disciplineType;
+    this.dogId = data.dogId;
+    this.showId = data.showId;
+    this.duration = data.duration;
+    this.marks = data.marks;
   }
 }
 

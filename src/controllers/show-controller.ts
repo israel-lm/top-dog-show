@@ -7,7 +7,7 @@ import {
   GetShowUseCase,
   ListShowsUseCase,
   RegisterDogUseCase,
-  UpdateShowUseCase,
+  UpdateShowUseCase
 } from "../use-cases/show-use-cases";
 
 export class CreateShowController implements IController {

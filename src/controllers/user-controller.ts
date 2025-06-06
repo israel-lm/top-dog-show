@@ -6,7 +6,7 @@ import {
   DeleteUserUseCase,
   GetUserUseCase,
   ListUsersUseCase,
-  UpdateUserUseCase,
+  UpdateUserUseCase
 } from "../use-cases/user-use-cases";
 
 export class CreateUserController implements IController {

@@ -1,20 +1,23 @@
 import { RequestModel, ResponseData, ListRequestData } from "./base-models";
+import { UserRole } from "./constants";
+import { UserSchema } from "./validation-schemas";
 
 export class UserData {
   firstName: string;
   lastName: string;
-  role: string;
-  userId: string;
+  role: UserRole;
   password: string;
   email: string;
+  userId?: string;
 
-  constructor(firstName: string, lastName: string, email?: string, role?: string, password?: string, userId?: string) {
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.email = email ?? "";
-    this.password = password ?? "";
-    this.role = role ?? "";
-    this.userId = userId ?? "";
+  constructor(data: any) {
+    const validatedData = UserSchema.parse(data);
+    this.firstName = validatedData.firstName;
+    this.lastName = validatedData.lastName;
+    this.email = validatedData.email;
+    this.password = validatedData.password;
+    this.role = validatedData.role;
+    this.userId = validatedData.userId;
   }
 }
 

@@ -6,7 +6,7 @@ import {
   DeleteResultsUseCase,
   GetRankingUseCase,
   GetResultsUseCase,
-  UpdateResultsUseCase,
+  UpdateResultsUseCase
 } from "../use-cases/ranking-use-cases";
 
 export class RegisterResultsController implements IController {

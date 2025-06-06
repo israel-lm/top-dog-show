@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx tsx ./src/frameworks-drivers/express/app.ts"
+    "start": "nodemon --exec npx tsx ./src/server.ts"
   },
   "repository": {
     "type": "git",
@@ -20,9 +20,14 @@
   },
   "homepage": "https://github.com/israel-lm/top-dog-show#readme",
   "devDependencies": {
+    "@types/express": "^5.0.2",
     "express": "^5.1.0",
     "nodemon": "^3.1.10",
     "prettier": "^3.5.3",
+    "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "zod": "^3.25.50"
   }
 }

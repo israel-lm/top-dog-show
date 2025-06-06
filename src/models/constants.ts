@@ -2,13 +2,13 @@ export enum DisciplineType {
   WallClimb,
   HighJump,
   LongJump,
-  Treadmill,
+  Treadmill
 }
 
 export enum RankType {
   General = 10,
   ByCategory,
-  ByDiscipline,
+  ByDiscipline
 }
 
 export enum UseCases {
@@ -36,5 +36,17 @@ export enum UseCases {
   Login,
   Logout,
   ForgotPassword,
-  RefreshToken,
+  RefreshToken
+}
+
+export enum ErrorCode {
+  InvalidRequestErr,
+  ValidationErr,
+  NotFoundErr,
+  UnknownErr
+}
+
+export enum UserRole {
+  Admin = 100,
+  User = 150
 }

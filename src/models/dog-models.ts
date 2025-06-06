@@ -1,4 +1,5 @@
 import { RequestModel, ResponseData, ListRequestData } from "./base-models";
+import { DogSchema } from "./validation-schemas";
 
 export class DogData {
   dogName: string;
@@ -9,22 +10,15 @@ export class DogData {
   weight: number;
   ageInMonths: number;
 
-  constructor(
-    dogName: string,
-    dogId: string,
-    ownerFirstName: string,
-    ownerLastName: string,
-    gender: string,
-    weight: number,
-    ageInMonths: number,
-  ) {
-    this.dogName = dogName;
-    this.dogId = dogId;
-    this.ownerFirstName = ownerFirstName;
-    this.ownerLastName = ownerLastName;
-    this.gender = gender;
-    this.weight = weight;
-    this.ageInMonths = ageInMonths;
+  constructor(data: any) {
+    const validatedData = DogSchema.parse(data);
+    this.dogName = validatedData.dogName;
+    this.dogId = validatedData.dogId ?? "";
+    this.ownerFirstName = validatedData.ownerFirstName;
+    this.ownerLastName = validatedData.ownerLastName;
+    this.gender = validatedData.gender;
+    this.weight = validatedData.weight;
+    this.ageInMonths = validatedData.ageInMonths;
   }
 }
 
@@ -100,7 +94,7 @@ export class GetDogResponseData extends ResponseData {
   }
 }
 
-export class ListDogssResponseData extends ResponseData {
+export class ListDogsResponseData extends ResponseData {
   items: DogData[];
   total: number;
 

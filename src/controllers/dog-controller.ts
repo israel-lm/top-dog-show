@@ -6,7 +6,7 @@ import {
   DeleteDogUseCase,
   GetDogUseCase,
   ListDogsUseCase,
-  UpdateDogUseCase,
+  UpdateDogUseCase
 } from "../use-cases/dog-use-cases";
 
 export class CreateDogController implements IController {
