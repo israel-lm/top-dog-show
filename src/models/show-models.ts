@@ -99,7 +99,7 @@ export class GetShowResponseData extends ResponseData {
   }
 }
 
-export class ListUsersResponseData extends ResponseData {
+export class ListShowsResponseData extends ResponseData {
   items: ShowData[];
   total: number;
 

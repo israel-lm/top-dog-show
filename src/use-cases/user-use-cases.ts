@@ -4,80 +4,35 @@ import { RequestModel, ResponseModel } from "../models/base-models";
 
 export class CreateUserUseCase implements IUseCase {
   async execute(requestModel: RequestModel, repository: IRepository): Promise<ResponseModel> {
-    let responseData = null;
-    try {
-      responseData = await repository.create(requestModel);
-      if (responseData) {
-        return new ResponseModel("success", responseData);
-      } else {
-        return new ResponseModel("error", "Failed to create user");
-      }
-    } catch (err) {
-      return new ResponseModel("error", "Failed to create user");
-    }
+    const responseData = await repository.create(requestModel);
+    return new ResponseModel("success", responseData);
   }
 }
 
 export class UpdateUserUseCase implements IUseCase {
   async execute(requestModel: RequestModel, repository: IRepository): Promise<ResponseModel> {
-    let responseData = null;
-    try {
-      responseData = await repository.update(requestModel);
-      if (responseData) {
-        return new ResponseModel("success", responseData);
-      } else {
-        return new ResponseModel("error", "Failed to update user");
-      }
-    } catch (err) {
-      return new ResponseModel("error", "Failed to create user");
-    }
+    const responseData = await repository.update(requestModel);
+    return new ResponseModel("success", responseData);
   }
 }
 
 export class DeleteUserUseCase implements IUseCase {
   async execute(requestModel: RequestModel, repository: IRepository): Promise<ResponseModel> {
-    let responseData = null;
-    try {
-      responseData = await repository.delete(requestModel);
-      if (responseData) {
-        return new ResponseModel("success", responseData);
-      } else {
-        return new ResponseModel("error", "Failed to delete user");
-      }
-    } catch (err) {
-      return new ResponseModel("error", "Failed to delete user");
-    }
+    const responseData = await repository.delete(requestModel);
+    return new ResponseModel("success", responseData);
   }
 }
 
 export class GetUserUseCase implements IUseCase {
   async execute(requestModel: RequestModel, repository: IRepository): Promise<ResponseModel> {
-    let responseData = null;
-    try {
-      responseData = await repository.read(requestModel);
-      if (responseData) {
-        return new ResponseModel("success", responseData);
-      } else {
-        return new ResponseModel("error", "Failed to get user");
-      }
-    } catch (err) {
-      return new ResponseModel("error", "Failed to get user");
-    }
+    const responseData = await repository.read(requestModel);
+    return new ResponseModel("success", responseData);
   }
 }
 
 export class ListUsersUseCase implements IUseCase {
   async execute(requestModel: RequestModel, repository: IRepository): Promise<ResponseModel> {
-    let responseData = null;
-    try {
-      responseData = await repository.read(requestModel);
-      if (responseData) {
-        return new ResponseModel("success", responseData);
-      } else {
-        return new ResponseModel("error", "Failed to list users");
-      }
-    } catch (err) {
-      return new ResponseModel("error", "Failed to list users");
-    }
+    const responseData = await repository.read(requestModel);
+    return new ResponseModel("success", responseData);
   }
 }

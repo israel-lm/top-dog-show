@@ -24,7 +24,7 @@ async function updateDog(req: Request, res: Response, next: NextFunction) {
   if (responseData.errCode) {
     return next(new AppError(responseData.errMsg, responseData.errCode));
   }
-  res.status(200).json(responseData);
+  res.json(responseData);
 }
 
 async function deleteDog(req: Request, res: Response, next: NextFunction) {

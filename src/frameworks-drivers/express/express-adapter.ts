@@ -45,7 +45,15 @@ import {
 
 import { ListRequestData } from "../../models/base-models";
 import { DogRepository } from "../SQL-repository/dog-repository";
-import { UserData } from "../../models/user-models";
+import {
+  CreateUserRequestModel,
+  DeleteUserRequestModel,
+  GetUserRequestModel,
+  ListUsersRequestModel,
+  UpdateUserRequestModel,
+  UserData
+} from "../../models/user-models";
+import { UserRepository } from "../SQL-repository/user-repository";
 
 function getInvalidDataObject() {
   return { errCode: ErrorCode.ValidationErr, errMsg: "Invalid data" };
@@ -87,8 +95,9 @@ export class ExpressAdapter implements IFrameworkAdapter {
     let controller;
     let requestModel;
     let repository;
-    let dogData;
     let listData;
+    let dogData;
+    let userData;
 
     switch (useCaseId) {
       case UseCases.CreateDog:
@@ -117,7 +126,7 @@ export class ExpressAdapter implements IFrameworkAdapter {
           controller = new DeleteDogController();
           repository = new DogRepository();
         } catch (err) {
-          return { errCode: ErrorCode.ValidationErr, errMsg: "Invalid data" };
+          return getInvalidDataObject();
         }
         break;
       case UseCases.GetDog:
@@ -126,7 +135,7 @@ export class ExpressAdapter implements IFrameworkAdapter {
           controller = new GetDogController();
           repository = new DogRepository();
         } catch {
-          return { errCode: ErrorCode.ValidationErr, errMsg: "Invalid data" };
+          return getInvalidDataObject();
         }
         break;
       case UseCases.ListDogs:
@@ -162,19 +171,52 @@ export class ExpressAdapter implements IFrameworkAdapter {
       //   case UseCases.GetRanking:
       //     break;
       case UseCases.CreateUser:
-        const userData = instantiateUserData(requestData);
+        userData = instantiateUserData(requestData);
         if (userData.errCode !== undefined) {
           return userData;
         } else {
+          requestModel = new CreateUserRequestModel(userData);
+          controller = new CreateUserController();
+          repository = new UserRepository();
         }
         break;
       case UseCases.UpdateUser:
+        userData = instantiateUserData(requestData);
+        if (userData.errCode !== undefined) {
+          return userData;
+        } else {
+          requestModel = new UpdateUserRequestModel(userData);
+          controller = new UpdateDogController();
+          repository = new UserRepository();
+        }
         break;
       case UseCases.DeleteUser:
+        try {
+          requestModel = new DeleteUserRequestModel(requestData.userId);
+          controller = new DeleteUserController();
+          repository = new UserRepository();
+        } catch (err) {
+          return getInvalidDataObject();
+        }
         break;
       case UseCases.GetUser:
+        try {
+          requestModel = new GetUserRequestModel(requestData.userId);
+          controller = new GetUserController();
+          repository = new UserRepository();
+        } catch (err) {
+          return getInvalidDataObject();
+        }
         break;
       case UseCases.ListUsers:
+        listData = instantiateListData(requestData);
+        if (listData.errCode !== undefined) {
+          return listData;
+        } else {
+          requestModel = new ListUsersRequestModel(listData);
+          controller = new ListUsersController();
+          repository = new UserRepository();
+        }
         break;
       //   case UseCases.Login:
       //     break;
