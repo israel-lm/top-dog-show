@@ -2,7 +2,7 @@
 
 ## Layer Architecture
 
-![Layer Architecture](./top-dog-show-data-model-sw-architecture.drawio.png)
+![Layer Architecture](./top-dog-show-sw-architecture.png)
 
 ## Domain Models
 

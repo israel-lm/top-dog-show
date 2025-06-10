@@ -296,6 +296,5 @@ export class ExpressAdapter implements IFrameworkAdapter {
     }
 
     return await controller?.execute(requestModel, repository);
-    //return JSON.stringify(responseModel);
   }
 }
