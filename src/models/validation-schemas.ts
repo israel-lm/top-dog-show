@@ -47,3 +47,9 @@ export const UserSchema = z.object({
   password: z.string(),
   email: z.email()
 });
+
+export const DogRegistrationSchema = z.object({
+  dogId: z.string(),
+  showId: z.string(),
+  registerUnregister: z.boolean()
+});

@@ -1,4 +1,5 @@
 import { RequestModel, ResponseData, ListRequestData } from "./base-models";
+import { DogRegistrationSchema, ShowSchema } from "./validation-schemas";
 
 export class ShowData {
   hostId: string;
@@ -6,11 +7,12 @@ export class ShowData {
   startDate: Date;
   endDate: Date;
 
-  constructor(hostId: string, address: string, startDate: Date, endDate: Date) {
-    this.hostId = hostId;
-    this.address = address;
-    this.startDate = startDate;
-    this.endDate = endDate;
+  constructor(data: any) {
+    const validatedData = ShowSchema.parse(data);
+    this.hostId = validatedData.hostId;
+    this.address = validatedData.address;
+    this.startDate = new Date(validatedData.startDate);
+    this.endDate = new Date(validatedData.endDate);
   }
 }
 
@@ -64,11 +66,12 @@ export class RegisterDogRequestModel extends RequestModel {
   showId: string;
   registerUnregister: boolean;
 
-  constructor(dogId: string, showId: string, registerUnregister: boolean) {
+  constructor(data: any) {
     super();
-    this.dogId = dogId;
-    this.showId = showId;
-    this.registerUnregister = registerUnregister;
+    const validatedData = DogRegistrationSchema.parse(data);
+    this.dogId = validatedData.dogId;
+    this.showId = validatedData.showId;
+    this.registerUnregister = validatedData.registerUnregister;
   }
 }
 

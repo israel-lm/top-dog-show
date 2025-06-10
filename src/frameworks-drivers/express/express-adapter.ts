@@ -54,6 +54,16 @@ import {
   UserData
 } from "../../models/user-models";
 import { UserRepository } from "../SQL-repository/user-repository";
+import {
+  CreateShowRequestModel,
+  DeleteShowRequestModel,
+  GetShowRequestModel,
+  ListShowsRequestModel,
+  RegisterDogRequestModel,
+  ShowData,
+  UpdateShowRequestModel
+} from "../../models/show-models";
+import { ShowRepository } from "../SQL-repository/show-repository";
 
 function getInvalidDataObject() {
   return { errCode: ErrorCode.ValidationErr, errMsg: "Invalid data" };
@@ -90,6 +100,15 @@ function instantiateUserData(request: any): UserData | any {
   }
 }
 
+function instantiateShowData(request: any): ShowData | any {
+  try {
+    return new ShowData(request);
+  } catch (err) {
+    console.log(err);
+    return getInvalidDataObject();
+  }
+}
+
 export class ExpressAdapter implements IFrameworkAdapter {
   async execute(useCaseId: UseCases, requestData: any): Promise<any> {
     let controller;
@@ -98,6 +117,7 @@ export class ExpressAdapter implements IFrameworkAdapter {
     let listData;
     let dogData;
     let userData;
+    let showData;
 
     switch (useCaseId) {
       case UseCases.CreateDog:
@@ -148,18 +168,63 @@ export class ExpressAdapter implements IFrameworkAdapter {
           repository = new DogRepository();
         }
         break;
-      //   case UseCases.CreateShow:
-      //     break;
-      //   case UseCases.UpdateShow:
-      //     break;
-      //   case UseCases.DeleteShow:
-      //     break;
-      //   case UseCases.GetShow:
-      //     break;
-      //   case UseCases.ListShows:
-      //     break;
-      //   case UseCases.RegisterDog:
-      //     break;
+      case UseCases.CreateShow:
+        showData = instantiateShowData(requestData);
+        if (showData.errCode !== undefined) {
+          return showData;
+        } else {
+          requestModel = new CreateShowRequestModel(showData);
+          controller = new CreateShowController();
+          repository = new ShowRepository();
+        }
+        break;
+      case UseCases.UpdateShow:
+        showData = instantiateShowData(requestData);
+        if (showData.errCode !== undefined) {
+          return showData;
+        } else {
+          requestModel = new UpdateShowRequestModel(showData);
+          controller = new UpdateShowController();
+          repository = new ShowRepository();
+        }
+        break;
+      case UseCases.DeleteShow:
+        try {
+          requestModel = new DeleteShowRequestModel(requestData.showId);
+          controller = new DeleteShowController();
+          repository = new ShowRepository();
+        } catch (err) {
+          return getInvalidDataObject();
+        }
+        break;
+      case UseCases.GetShow:
+        try {
+          requestModel = new GetShowRequestModel(requestData.showId);
+          controller = new GetShowController();
+          repository = new ShowRepository();
+        } catch (err) {
+          return getInvalidDataObject();
+        }
+        break;
+      case UseCases.ListShows:
+        listData = instantiateListData(requestData);
+        if (listData.errCode !== undefined) {
+          return listData;
+        } else {
+          requestModel = new ListShowsRequestModel(listData);
+          controller = new ListShowsController();
+          repository = new ShowRepository();
+        }
+        break;
+      case UseCases.RegisterDog:
+        try {
+          requestModel = new RegisterDogRequestModel(requestData);
+          controller = new RegisterDogController();
+          repository = new ShowRepository();
+        } catch (err) {
+          return getInvalidDataObject();
+        }
+        break;
       //   case UseCases.RegisterResults:
       //     break;
       //   case UseCases.UpdateResults:
