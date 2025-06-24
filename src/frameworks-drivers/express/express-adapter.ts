@@ -44,7 +44,7 @@ import {
 } from "../../models/dog-models";
 
 import { ListRequestData } from "../../models/base-models";
-import { DogRepository } from "../SQL-repository/dog-repository";
+import { DogRepository } from "../sql-repository/dog-repository";
 import {
   CreateUserRequestModel,
   DeleteUserRequestModel,
@@ -53,7 +53,7 @@ import {
   UpdateUserRequestModel,
   UserData
 } from "../../models/user-models";
-import { UserRepository } from "../SQL-repository/user-repository";
+import { UserRepository } from "../sql-repository/user-repository";
 import {
   CreateShowRequestModel,
   DeleteShowRequestModel,
@@ -63,7 +63,7 @@ import {
   ShowData,
   UpdateShowRequestModel
 } from "../../models/show-models";
-import { ShowRepository } from "../SQL-repository/show-repository";
+import { ShowRepository } from "../sql-repository/show-repository";
 
 function getInvalidDataObject() {
   return { errCode: ErrorCode.ValidationErr, errMsg: "Invalid data" };
