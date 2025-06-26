@@ -1,7 +1,15 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn, Relation } from "typeorm";
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryColumn,
+  Relation
+} from "typeorm";
 
 import { DogOwner } from "./dog-owner";
 import { RankAssociation } from "./rank";
+import { Category } from "../../constants";
 
 @Entity()
 export class Dog {
@@ -14,8 +22,8 @@ export class Dog {
   @Column("int")
   weight: number;
 
-  @Column("int")
-  category: number;
+  @Column({ type: "enum", enum: Category })
+  category: Category;
 
   @Column("varchar")
   gender: string;
@@ -23,7 +31,10 @@ export class Dog {
   @Column("int")
   ageInMonths: number;
 
-  @ManyToOne(() => DogOwner, (owner) => owner.dogs)
+  @ManyToOne(() => DogOwner, (owner) => owner.dogs, {
+    cascade: true,
+    eager: true
+  })
   owner: Relation<DogOwner>;
 
   // @OneToMany(() => RankAssociation, (association) => association.dog)

@@ -1,5 +1,5 @@
 import { RequestModel, ResponseData, ListRequestData } from "./base-models";
-import { RankType, DisciplineType } from "./constants";
+import { RankType, DisciplineType } from "../constants";
 
 export class RankPositionData {
   position: number;

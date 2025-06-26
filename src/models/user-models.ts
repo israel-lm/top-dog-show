@@ -1,5 +1,5 @@
 import { RequestModel, ResponseData, ListRequestData } from "./base-models";
-import { UserRole } from "./constants";
+import { UserRole } from "../constants";
 import { UserSchema } from "./validation-schemas";
 
 export class UserData {

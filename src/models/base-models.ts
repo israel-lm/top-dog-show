@@ -1,4 +1,4 @@
-import { ErrorCode } from "./constants";
+import { ErrorCode } from "../constants";
 import { PaginationSchema } from "./validation-schemas";
 
 export class BaseModel {}

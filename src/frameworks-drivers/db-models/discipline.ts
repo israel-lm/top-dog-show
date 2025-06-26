@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn, Relation } from "typeorm";
 import { Participation } from "./participation";
-import { DisciplineType } from "../../models/constants";
+import { DisciplineType } from "../../constants";
 
 @Entity()
 export class Treadmill {
@@ -55,7 +55,7 @@ export class WallClimbHighJump {
   @Column("int")
   executionTime: number;
 
-  @Column("enum")
+  @Column({ type: "enum", enum: DisciplineType })
   type: DisciplineType;
 }
 

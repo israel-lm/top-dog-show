@@ -3,19 +3,19 @@ import { RequestModel, ResponseData } from "../../models/base-models";
 import { RegisterResultsResponseData } from "../../models/ranking-models";
 
 export class RankingRepository implements IRepository {
-  create(input: RequestModel): ResponseData {
+  async create(input: RequestModel): Promise<ResponseData> {
     return new RegisterResultsResponseData("asdfasfkjasfasfasjfas");
   }
 
-  read(input: RequestModel): ResponseData {
+  async read(input: RequestModel): Promise<ResponseData> {
     return new RegisterResultsResponseData("asdfasfkjasfasfasjfas");
   }
 
-  update(input: RequestModel): ResponseData {
+  async update(input: RequestModel): Promise<ResponseData> {
     return new RegisterResultsResponseData("asdfasfkjasfasfasjfas");
   }
 
-  delete(input: RequestModel): ResponseData {
+  async delete(input: RequestModel): Promise<ResponseData> {
     return new RegisterResultsResponseData("asdfasfkjasfasfasjfas");
   }
 }

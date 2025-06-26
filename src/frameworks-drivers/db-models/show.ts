@@ -1,15 +1,16 @@
 import { Column, Entity, ManyToOne, PrimaryColumn, Relation } from "typeorm";
 import { User } from "./user";
+import { Location } from "./location";
 
 @Entity()
 export class Show {
   @PrimaryColumn("uuid")
   id: string;
 
-  @Column("datetime")
+  @Column("timestamp")
   startDate: Date;
 
-  @Column("datetime")
+  @Column("timestamp")
   endDate: Date;
 
   @ManyToOne(() => User)

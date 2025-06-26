@@ -1,6 +1,6 @@
 import { IFrameworkAdapter } from "../framework-adapter-interface";
-import { UseCases } from "../../models/constants";
-import { ErrorCode } from "../../models/constants";
+import { UseCases } from "../../constants";
+import { ErrorCode } from "../../constants";
 
 import {
   CreateDogController,

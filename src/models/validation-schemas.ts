@@ -1,5 +1,5 @@
 import { z } from "zod/v4";
-import { DisciplineType, UserRole } from "./constants";
+import { DisciplineType, UserRole } from "../constants";
 
 export const DogSchema = z.object({
   dogName: z.string(),

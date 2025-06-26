@@ -2,7 +2,7 @@ import express from "express";
 import dogRouter from "./dog-router";
 import userRouter from "./user-router";
 import { AppError, handleError } from "./error-handler";
-import { ErrorCode } from "../../models/constants";
+import { ErrorCode } from "../../constants";
 import showRouter from "./show-router";
 
 const app = express();
@@ -14,7 +14,7 @@ app.use("/user", userRouter);
 app.use("/show", showRouter);
 
 app.all("*name", (req, res, next) => {
-  const err = new AppError("Not found", ErrorCode.NotFoundErr);
+  const err = new AppError("Fail", "Not found", ErrorCode.NotFoundErr);
   next(err);
 });
 

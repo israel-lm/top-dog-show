@@ -4,13 +4,13 @@ import { Dog } from "./dog";
 
 @Entity()
 export class DogOwner {
-  @PrimaryColumn()
+  @PrimaryColumn("uuid")
   id: string;
 
-  @Column()
+  @Column("varchar")
   firstName: string;
 
-  @Column()
+  @Column("varchar")
   lastName: string;
 
   @OneToMany(() => Dog, (dog) => dog.owner)

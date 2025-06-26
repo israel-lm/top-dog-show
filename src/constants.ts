@@ -50,3 +50,11 @@ export enum UserRole {
   Admin = 100,
   User = 150
 }
+
+export enum Category {
+  Lightweight = 25,
+  Medium,
+  Heavy
+}
+
+export const NamespaceUuid = "98b2b71b-0b40-4f50-ae6e-0d28875c2e9b";

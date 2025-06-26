@@ -9,14 +9,14 @@ import {
   UserData
 } from "../../models/user-models";
 
-import { UserRole } from "../../models/constants";
+import { UserRole } from "../../constants";
 
 export class UserRepository implements IRepository {
-  create(input: RequestModel): ResponseData {
+  async create(input: RequestModel): Promise<ResponseData> {
     return new CreateUserResponseData("asdfasfkjasfasfasjfas");
   }
 
-  read(input: RequestModel): ResponseData {
+  async read(input: RequestModel): Promise<ResponseData> {
     const userData = new UserData({
       firstName: "Israel",
       lastName: "Marinho",
@@ -32,11 +32,11 @@ export class UserRepository implements IRepository {
     }
   }
 
-  update(input: RequestModel): ResponseData {
+  async update(input: RequestModel): Promise<ResponseData> {
     return new UpdateUserResponseData("asdfasfkjasfasfasjfas");
   }
 
-  delete(input: RequestModel): ResponseData {
+  async delete(input: RequestModel): Promise<ResponseData> {
     return null;
   }
 }
