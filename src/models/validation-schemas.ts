@@ -2,13 +2,13 @@ import { z } from "zod/v4";
 import { DisciplineType, UserRole } from "../constants";
 
 export const DogSchema = z.object({
-  dogName: z.string(),
+  dogName: z.string().optional(),
   dogId: z.string().optional(),
-  ownerFirstName: z.string(),
-  ownerLastName: z.string(),
-  gender: z.string(),
-  weight: z.number(),
-  ageInMonths: z.number()
+  ownerFirstName: z.string().optional(),
+  ownerLastName: z.string().optional(),
+  gender: z.string().optional(),
+  weight: z.number().optional(),
+  ageInMonths: z.number().optional()
 });
 
 export const ShowSchema = z.object({

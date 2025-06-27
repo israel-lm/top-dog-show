@@ -13,6 +13,9 @@ export class DogOwner {
   @Column("varchar")
   lastName: string;
 
-  @OneToMany(() => Dog, (dog) => dog.owner)
+  @OneToMany(() => Dog, (dog) => dog.owner, {
+    cascade: true,
+    eager: true
+  })
   dogs: Relation<Dog[]>;
 }

@@ -14,54 +14,32 @@ import {
 import { dataManager } from "./data-source";
 import { Dog } from "../db-models/dog";
 import { DogOwner } from "../db-models/dog-owner";
-import { Category } from "../../constants";
+import { Category, ErrorCode } from "../../constants";
 import { getUuid } from "../../commons";
-
-function getCategory(weight: number): Category {
-  let category;
-  if (weight < 20) {
-    category = Category.Lightweight;
-  } else if (weight < 25) {
-    category = Category.Medium;
-  } else {
-    category = Category.Heavy;
-  }
-
-  return category;
-}
+import { getErrorResponse, parseError } from "./error-parser";
 
 export class DogRepository implements IRepository {
-  async create(input: RequestModel): Promise<ResponseData> {
+  async create(request: RequestModel): Promise<ResponseData> {
     let dogId = "";
-    if (input instanceof CreateDogRequestModel) {
-      const dogOwner = new DogOwner();
-      const dogData = input.dogData;
-      dogOwner.firstName = dogData.ownerFirstName;
-      dogOwner.lastName = dogData.ownerLastName;
-      dogOwner.id = getUuid([dogData.ownerFirstName, dogData.ownerLastName]);
-
-      const dog = new Dog();
-      dog.name = dogData.dogName;
-      dog.ageInMonths = dogData.ageInMonths;
-      dog.weight = dogData.weight;
-      dog.gender = dogData.gender;
-      dog.category = getCategory(dogData.weight);
-      dog.id = getUuid([dogData.dogName, dogOwner.id]);
-      dog.owner = dogOwner;
-
-      try {
-        await dataManager.save(dog);
-        dogId = dog.id;
-      } catch (err) {
-        console.error(err);
-      }
+    const dog = this.instantiateDog(request);
+    try {
+      await dataManager.upsert(DogOwner, dog.owner, {
+        conflictPaths: ["id"],
+        skipUpdateIfNoValuesChanged: true
+      });
+      await dataManager.insert(Dog, dog);
+      dogId = dog.id;
+    } catch (err) {
+      console.error(`Create dog failed: ${err.detail}`);
+      //console.error(err);
+      return getErrorResponse(err.detail);
     }
     return new CreateDogResponseData(dogId);
   }
 
-  async read(input: RequestModel): Promise<ResponseData> {
-    if (input instanceof ListDogsRequestModel) {
-      const listData = input.listData;
+  async read(request: RequestModel): Promise<ResponseData> {
+    if (request instanceof ListDogsRequestModel) {
+      const listData = request.listData;
       let dogs;
       try {
         dogs = await dataManager
@@ -72,6 +50,7 @@ export class DogRepository implements IRepository {
           .getMany();
       } catch (err) {
         console.error(err);
+        return getErrorResponse(err.detail);
       }
 
       let count = 0;
@@ -94,19 +73,113 @@ export class DogRepository implements IRepository {
     } else {
       let dog;
       try {
-        dog = await dataManager.findOneBy(Dog, { id: input.dogId });
+        dog = await dataManager.findOneBy(Dog, { id: request.dogId });
+        if (!dog) {
+          return getErrorResponse("not found");
+        }
       } catch (err) {
         console.error(err);
+        return getErrorResponse(err.detail);
       }
       return new GetDogResponseData(dog);
     }
   }
 
-  async update(input: RequestModel): Promise<ResponseData> {
-    return new UpdateDogResponseData("asdfasfkjasfasfasjfas");
+  async update(request: RequestModel): Promise<ResponseData> {
+    let dog;
+    const dogId = request.dogData.dogId;
+    try {
+      //Check whether the dog exists in DB
+      dog = await dataManager.findOne(Dog, {
+        where: { id: dogId },
+        relations: { owner: true }
+      });
+      if (!dog) {
+        return getErrorResponse("not found");
+      }
+    } catch (err) {
+      console.error(err);
+      return getErrorResponse(err.detail);
+    }
+
+    // Check whether should update the owner
+    if (
+      request.dogData.ownerFirstName != dog.owner.firstName &&
+      request.dogData.ownerLastName != dog.owner.lastName
+    ) {
+      try {
+        const dogOwner = this.instantiateOwner(request);
+        await dataManager.upsert(DogOwner, dogOwner, {
+          conflictPaths: ["id"],
+          skipUpdateIfNoValuesChanged: true
+        });
+      } catch (err) {
+        console.error(err);
+        return getErrorResponse(err.detail);
+      }
+    }
+    const newDog = this.instantiateDog(request);
+    try {
+      // Update the dog
+      await dataManager.update(Dog, { id: dogId }, newDog);
+    } catch (err) {
+      console.error(err);
+      return getErrorResponse(err.detail);
+    }
+    return new UpdateDogResponseData(newDog.id);
   }
 
-  async delete(input: RequestModel): Promise<ResponseData> {
+  async delete(request: RequestModel): Promise<ResponseData> {
+    try {
+      const result = await dataManager.delete(Dog, request.dogId);
+      if (result.affected == 0) {
+        return getErrorResponse("not found");
+      }
+    } catch (err) {
+      console.error(err);
+      return getErrorResponse(err.detail);
+    }
     return null;
+  }
+
+  getCategory(weight: number): Category | undefined {
+    let category = undefined;
+    if (weight && weight > 0) {
+      if (weight < 20) {
+        category = Category.Lightweight;
+      } else if (weight < 25) {
+        category = Category.Medium;
+      } else {
+        category = Category.Heavy;
+      }
+    }
+
+    return category;
+  }
+
+  instantiateDog(request: RequestModel): Dog {
+    const dogData = request.dogData;
+    const dog = new Dog();
+    dog.name = dogData?.dogName;
+    dog.ageInMonths = dogData?.ageInMonths;
+    dog.weight = dogData?.weight;
+    dog.gender = dogData?.gender;
+    dog.category = this.getCategory(dogData?.weight);
+    if (dogData.ownerFirstName) {
+      const dogOwner = this.instantiateOwner(request);
+      dog.id = getUuid([dogData?.dogName, dogOwner.id]);
+      dog.owner = this.instantiateOwner(request);
+    }
+    return dog;
+  }
+
+  instantiateOwner(request: RequestModel): DogOwner {
+    const dogOwner = new DogOwner();
+    const dogData = request.dogData;
+    dogOwner.firstName = dogData.ownerFirstName;
+    dogOwner.lastName = dogData.ownerLastName;
+    dogOwner.id = getUuid([dogData.ownerFirstName, dogData.ownerLastName]);
+
+    return dogOwner;
   }
 }

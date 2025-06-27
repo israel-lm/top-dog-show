@@ -42,6 +42,7 @@ export enum UseCases {
 export enum ErrorCode {
   InvalidRequestErr,
   ValidationErr,
+  DuplicateErr,
   NotFoundErr,
   UnknownErr
 }

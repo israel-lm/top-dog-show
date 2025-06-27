@@ -66,7 +66,10 @@ import {
 import { ShowRepository } from "../sql-repository/show-repository";
 
 function getInvalidDataObject() {
-  return { errCode: ErrorCode.ValidationErr, errMsg: "Invalid data" };
+  return {
+    status: "Fail",
+    data: { errCode: ErrorCode.ValidationErr, errMsg: "Invalid data" }
+  };
 }
 
 function instantiateDogData(request: any): DogData | any {
@@ -122,7 +125,7 @@ export class ExpressAdapter implements IFrameworkAdapter {
     switch (useCaseId) {
       case UseCases.CreateDog:
         dogData = instantiateDogData(requestData);
-        if (dogData.errCode !== undefined) {
+        if (dogData.data?.errCode !== undefined) {
           return dogData;
         } else {
           requestModel = new CreateDogRequestModel(dogData);
@@ -132,7 +135,7 @@ export class ExpressAdapter implements IFrameworkAdapter {
         break;
       case UseCases.UpdateDog:
         dogData = instantiateDogData(requestData);
-        if (dogData.errCode !== undefined) {
+        if (dogData.data?.errCode !== undefined) {
           return dogData;
         } else {
           requestModel = new UpdateDogRequestModel(dogData);

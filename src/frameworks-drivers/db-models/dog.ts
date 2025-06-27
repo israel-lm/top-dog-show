@@ -31,10 +31,7 @@ export class Dog {
   @Column("int")
   ageInMonths: number;
 
-  @ManyToOne(() => DogOwner, (owner) => owner.dogs, {
-    cascade: true,
-    eager: true
-  })
+  @ManyToOne(() => DogOwner, (owner) => owner.dogs)
   owner: Relation<DogOwner>;
 
   // @OneToMany(() => RankAssociation, (association) => association.dog)
