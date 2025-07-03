@@ -27,3 +27,13 @@ export function buildResponseModel(response: ResponseData): ResponseModel {
   }
   return new ResponseModel(status, response);
 }
+
+export function buildErrorReponseData(
+  errCode: ErrorCode,
+  errMsg: string
+): ResponseData {
+  const data = new ResponseData();
+  data.errCode = errCode;
+  data.errMsg = errMsg;
+  return data;
+}

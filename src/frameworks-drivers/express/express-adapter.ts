@@ -163,7 +163,7 @@ export class ExpressAdapter implements IFrameworkAdapter {
         break;
       case UseCases.ListDogs:
         listData = instantiateListData(requestData);
-        if (listData.errCode !== undefined) {
+        if (listData.data?.errCode !== undefined) {
           return listData;
         } else {
           requestModel = new ListDogsRequestModel(listData);
@@ -173,7 +173,7 @@ export class ExpressAdapter implements IFrameworkAdapter {
         break;
       case UseCases.CreateShow:
         showData = instantiateShowData(requestData);
-        if (showData.errCode !== undefined) {
+        if (showData.data?.errCode !== undefined) {
           return showData;
         } else {
           requestModel = new CreateShowRequestModel(showData);
@@ -183,7 +183,7 @@ export class ExpressAdapter implements IFrameworkAdapter {
         break;
       case UseCases.UpdateShow:
         showData = instantiateShowData(requestData);
-        if (showData.errCode !== undefined) {
+        if (showData.data?.errCode !== undefined) {
           return showData;
         } else {
           requestModel = new UpdateShowRequestModel(showData);
@@ -211,7 +211,7 @@ export class ExpressAdapter implements IFrameworkAdapter {
         break;
       case UseCases.ListShows:
         listData = instantiateListData(requestData);
-        if (listData.errCode !== undefined) {
+        if (listData.data?.errCode !== undefined) {
           return listData;
         } else {
           requestModel = new ListShowsRequestModel(listData);
@@ -240,7 +240,7 @@ export class ExpressAdapter implements IFrameworkAdapter {
       //     break;
       case UseCases.CreateUser:
         userData = instantiateUserData(requestData);
-        if (userData.errCode !== undefined) {
+        if (userData.data?.errCode !== undefined) {
           return userData;
         } else {
           requestModel = new CreateUserRequestModel(userData);
@@ -250,7 +250,7 @@ export class ExpressAdapter implements IFrameworkAdapter {
         break;
       case UseCases.UpdateUser:
         userData = instantiateUserData(requestData);
-        if (userData.errCode !== undefined) {
+        if (userData.data?.errCode !== undefined) {
           return userData;
         } else {
           requestModel = new UpdateUserRequestModel(userData);
@@ -278,7 +278,7 @@ export class ExpressAdapter implements IFrameworkAdapter {
         break;
       case UseCases.ListUsers:
         listData = instantiateListData(requestData);
-        if (listData.errCode !== undefined) {
+        if (listData.data?.errCode !== undefined) {
           return listData;
         } else {
           requestModel = new ListUsersRequestModel(listData);

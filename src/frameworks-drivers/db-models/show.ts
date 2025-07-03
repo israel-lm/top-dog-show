@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryColumn, Relation } from "typeorm";
-import { User } from "./user";
+import { ShowUser } from "./user";
 import { Location } from "./location";
 
 @Entity()
@@ -13,8 +13,8 @@ export class Show {
   @Column("timestamp")
   endDate: Date;
 
-  @ManyToOne(() => User)
-  host: Relation<User>;
+  @ManyToOne(() => ShowUser)
+  host: Relation<ShowUser>;
 
   @ManyToOne(() => Location)
   location: Relation<Location>;

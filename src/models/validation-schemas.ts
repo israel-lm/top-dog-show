@@ -40,12 +40,12 @@ export const PaginationSchema = z.object({
 });
 
 export const UserSchema = z.object({
-  firstName: z.string(),
-  lastName: z.string(),
-  role: z.enum(UserRole),
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+  role: z.enum(UserRole).optional(),
   userId: z.string().optional(),
-  password: z.string(),
-  email: z.email()
+  password: z.string().optional(),
+  email: z.email().optional()
 });
 
 export const DogRegistrationSchema = z.object({

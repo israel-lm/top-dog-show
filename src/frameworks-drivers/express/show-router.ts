@@ -11,47 +11,57 @@ const showRouter = express.Router();
 
 async function createShow(req: Request, res: Response, next: NextFunction) {
   console.log("createShow");
-  const responseData = await adapter.execute(UseCases.CreateShow, req.body);
-  if (responseData.errCode) {
-    return next(new AppError(responseData.status, responseData.errMsg, responseData.errCode));
+  const response = await adapter.execute(UseCases.CreateShow, req.body);
+  if (response.data.errCode) {
+    return next(
+      new AppError(response.status, response.errMsg, response.data.errCode)
+    );
   }
-  res.status(201).json(responseData);
+  res.status(201).json(response);
 }
 
 async function updateShow(req: Request, res: Response, next: NextFunction) {
   console.log("updateShow");
-  const responseData = await adapter.execute(UseCases.UpdateShow, req.body);
-  if (responseData.errCode) {
-    return next(new AppError(responseData.status, responseData.errMsg, responseData.errCode));
+  const response = await adapter.execute(UseCases.UpdateShow, req.body);
+  if (response.data.errCode) {
+    return next(
+      new AppError(response.status, response.errMsg, response.data.errCode)
+    );
   }
-  res.json(responseData);
+  res.json(response);
 }
 
 async function deleteShow(req: Request, res: Response, next: NextFunction) {
   console.log("deleteShow");
-  const responseData = await adapter.execute(UseCases.DeleteShow, req.query);
-  if (responseData.errCode) {
-    return next(new AppError(responseData.status, responseData.errMsg, responseData.errCode));
+  const response = await adapter.execute(UseCases.DeleteShow, req.query);
+  if (response.data.errCode) {
+    return next(
+      new AppError(response.status, response.errMsg, response.data.errCode)
+    );
   }
-  res.status(204).json(responseData);
+  res.status(204).json(response);
 }
 
 async function getShow(req: Request, res: Response, next: NextFunction) {
   console.log("getShow");
-  const responseData = await adapter.execute(UseCases.GetShow, req.query);
-  if (responseData.errCode) {
-    return next(new AppError(responseData.status, responseData.errMsg, responseData.errCode));
+  const response = await adapter.execute(UseCases.GetShow, req.query);
+  if (response.data.errCode) {
+    return next(
+      new AppError(response.status, response.errMsg, response.data.errCode)
+    );
   }
-  res.json(responseData);
+  res.json(response);
 }
 
 async function listAllShows(req: Request, res: Response, next: NextFunction) {
   console.log("listAllShows");
-  const responseData = await adapter.execute(UseCases.ListShows, req.query);
-  if (responseData.errCode) {
-    return next(new AppError(responseData.status, responseData.errMsg, responseData.errCode));
+  const response = await adapter.execute(UseCases.ListShows, req.query);
+  if (response.data.errCode) {
+    return next(
+      new AppError(response.status, response.errMsg, response.data.errCode)
+    );
   }
-  res.json(responseData);
+  res.json(response);
 }
 
 async function registerDog(req: Request, res: Response, next: NextFunction) {
@@ -61,11 +71,16 @@ async function registerDog(req: Request, res: Response, next: NextFunction) {
     ...req.body
   };
 
-  const responseData = await adapter.execute(UseCases.RegisterDog, registrationData);
-  if (responseData.errCode) {
-    return next(new AppError(responseData.status, responseData.errMsg, responseData.errCode));
+  const response = await adapter.execute(
+    UseCases.RegisterDog,
+    registrationData
+  );
+  if (response.data.errCode) {
+    return next(
+      new AppError(response.status, response.errMsg, response.data.errCode)
+    );
   }
-  res.json(responseData);
+  res.json(response);
 }
 
 showRouter.route("/").get(listAllShows).post(createShow);

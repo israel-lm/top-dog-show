@@ -1,7 +1,8 @@
 import { Column, Entity, PrimaryColumn } from "typeorm";
+import { UserRole } from "../../constants";
 
 @Entity()
-export class User {
+export class ShowUser {
   @PrimaryColumn("uuid")
   id: string;
 
@@ -10,4 +11,13 @@ export class User {
 
   @Column("varchar")
   lastName: string;
+
+  @Column({ type: "enum", enum: UserRole })
+  role: UserRole;
+
+  @Column("varchar")
+  email: string;
+
+  @Column("varchar")
+  password: string;
 }

@@ -1,4 +1,5 @@
 import { DataSource } from "typeorm";
+import { SnakeNamingStrategy } from "typeorm-naming-strategies";
 
 export const appDataSource = new DataSource({
   type: "postgres",
@@ -11,7 +12,8 @@ export const appDataSource = new DataSource({
   logging: true,
   entities: ["src/frameworks-drivers/db-models/*.ts"],
   subscribers: [],
-  migrations: []
+  migrations: [],
+  namingStrategy: new SnakeNamingStrategy()
 });
 
 export const dataManager = appDataSource.manager;

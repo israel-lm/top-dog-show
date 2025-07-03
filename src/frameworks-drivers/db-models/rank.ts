@@ -1,4 +1,11 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn, Relation } from "typeorm";
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryColumn,
+  Relation
+} from "typeorm";
 
 import { Dog } from "./dog";
 import { Show } from "./show";

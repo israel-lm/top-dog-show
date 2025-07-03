@@ -2,18 +2,18 @@ import { RequestModel, ResponseData, ListRequestData } from "./base-models";
 import { DogSchema } from "./validation-schemas";
 
 export class DogData {
-  dogName: string;
-  dogId: string;
-  ownerFirstName: string;
-  ownerLastName: string;
-  gender: string;
-  weight: number;
-  ageInMonths: number;
+  dogName?: string;
+  dogId?: string;
+  ownerFirstName?: string;
+  ownerLastName?: string;
+  gender?: string;
+  weight?: number;
+  ageInMonths?: number;
 
   constructor(data: any) {
     const validatedData = DogSchema.parse(data);
     this.dogName = validatedData.dogName;
-    this.dogId = validatedData.dogId ?? "";
+    this.dogId = validatedData.dogId;
     this.ownerFirstName = validatedData.ownerFirstName;
     this.ownerLastName = validatedData.ownerLastName;
     this.gender = validatedData.gender;

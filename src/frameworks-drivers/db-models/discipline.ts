@@ -1,4 +1,12 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn, Relation } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryColumn,
+  Relation
+} from "typeorm";
 import { Participation } from "./participation";
 import { DisciplineType } from "../../constants";
 
@@ -72,7 +80,7 @@ export class Attempt {
 }
 
 @Entity()
-export class AttemptsAssocation {
+export class AttemptsAssociation {
   @PrimaryColumn("uuid")
   disciplineId: string;
 

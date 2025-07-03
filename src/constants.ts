@@ -48,8 +48,8 @@ export enum ErrorCode {
 }
 
 export enum UserRole {
-  Admin = 100,
-  User = 150
+  Admin = "Admin",
+  User = "User"
 }
 
 export enum Category {

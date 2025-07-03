@@ -3,11 +3,11 @@ import { UserRole } from "../constants";
 import { UserSchema } from "./validation-schemas";
 
 export class UserData {
-  firstName: string;
-  lastName: string;
-  role: UserRole;
-  password: string;
-  email: string;
+  firstName?: string;
+  lastName?: string;
+  role?: UserRole;
+  password?: string;
+  email?: string;
   userId?: string;
 
   constructor(data: any) {

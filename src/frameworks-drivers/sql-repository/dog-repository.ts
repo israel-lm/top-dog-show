@@ -15,8 +15,7 @@ import { dataManager } from "./data-source";
 import { Dog } from "../db-models/dog";
 import { DogOwner } from "../db-models/dog-owner";
 import { Category, ErrorCode } from "../../constants";
-import { getUuid } from "../../commons";
-import { getErrorResponse, parseError } from "./error-parser";
+import { buildErrorReponseData, getUuid } from "../../commons";
 
 export class DogRepository implements IRepository {
   async create(request: RequestModel): Promise<ResponseData> {
@@ -31,8 +30,10 @@ export class DogRepository implements IRepository {
       dogId = dog.id;
     } catch (err) {
       console.error(`Create dog failed: ${err.detail}`);
-      //console.error(err);
-      return getErrorResponse(err.detail);
+      return buildErrorReponseData(
+        ErrorCode.UnknownErr,
+        "Failed to register dog"
+      );
     }
     return new CreateDogResponseData(dogId);
   }
@@ -50,7 +51,10 @@ export class DogRepository implements IRepository {
           .getMany();
       } catch (err) {
         console.error(err);
-        return getErrorResponse(err.detail);
+        return buildErrorReponseData(
+          ErrorCode.UnknownErr,
+          "Failed to get dog information"
+        );
       }
 
       let count = 0;
@@ -75,11 +79,14 @@ export class DogRepository implements IRepository {
       try {
         dog = await dataManager.findOneBy(Dog, { id: request.dogId });
         if (!dog) {
-          return getErrorResponse("not found");
+          return buildErrorReponseData(ErrorCode.NotFoundErr, "Dog not found");
         }
       } catch (err) {
         console.error(err);
-        return getErrorResponse(err.detail);
+        return buildErrorReponseData(
+          ErrorCode.UnknownErr,
+          "Failed to get dog information"
+        );
       }
       return new GetDogResponseData(dog);
     }
@@ -95,11 +102,14 @@ export class DogRepository implements IRepository {
         relations: { owner: true }
       });
       if (!dog) {
-        return getErrorResponse("not found");
+        return buildErrorReponseData(ErrorCode.NotFoundErr, "Dog not found");
       }
     } catch (err) {
       console.error(err);
-      return getErrorResponse(err.detail);
+      return buildErrorReponseData(
+        ErrorCode.UnknownErr,
+        "Failed to update dog information"
+      );
     }
 
     // Check whether should update the owner
@@ -115,7 +125,10 @@ export class DogRepository implements IRepository {
         });
       } catch (err) {
         console.error(err);
-        return getErrorResponse(err.detail);
+        return buildErrorReponseData(
+          ErrorCode.UnknownErr,
+          "Failed to update dog owner information"
+        );
       }
     }
     const newDog = this.instantiateDog(request);
@@ -124,7 +137,10 @@ export class DogRepository implements IRepository {
       await dataManager.update(Dog, { id: dogId }, newDog);
     } catch (err) {
       console.error(err);
-      return getErrorResponse(err.detail);
+      return buildErrorReponseData(
+        ErrorCode.UnknownErr,
+        "Failed to update dog information"
+      );
     }
     return new UpdateDogResponseData(newDog.id);
   }
@@ -133,11 +149,14 @@ export class DogRepository implements IRepository {
     try {
       const result = await dataManager.delete(Dog, request.dogId);
       if (result.affected == 0) {
-        return getErrorResponse("not found");
+        return buildErrorReponseData(ErrorCode.NotFoundErr, "Dog not found");
       }
     } catch (err) {
       console.error(err);
-      return getErrorResponse(err.detail);
+      return buildErrorReponseData(
+        ErrorCode.UnknownErr,
+        "Failed to delete dog information"
+      );
     }
     return null;
   }
@@ -153,7 +172,6 @@ export class DogRepository implements IRepository {
         category = Category.Heavy;
       }
     }
-
     return category;
   }
 
@@ -179,7 +197,6 @@ export class DogRepository implements IRepository {
     dogOwner.firstName = dogData.ownerFirstName;
     dogOwner.lastName = dogData.ownerLastName;
     dogOwner.id = getUuid([dogData.ownerFirstName, dogData.ownerLastName]);
-
     return dogOwner;
   }
 }
