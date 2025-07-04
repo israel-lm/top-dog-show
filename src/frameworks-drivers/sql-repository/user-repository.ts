@@ -101,7 +101,6 @@ export class UserRepository implements IRepository {
           firstName: user.firstName,
           lastName: user.lastName,
           role: user.role,
-          password: user.password,
           email: user.email,
           userId: user.id
         });
