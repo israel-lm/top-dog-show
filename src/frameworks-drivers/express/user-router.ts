@@ -35,7 +35,7 @@ async function updateUser(req: Request, res: Response, next: NextFunction) {
 async function deleteUser(req: Request, res: Response, next: NextFunction) {
   console.log("deleteUser");
   const response = await adapter.execute(UseCases.DeleteUser, req.params);
-  if (response.data.errCode) {
+  if (response.data?.errCode) {
     return next(
       new AppError(response.status, response.data.errMsg, response.data.errCode)
     );
@@ -46,7 +46,7 @@ async function deleteUser(req: Request, res: Response, next: NextFunction) {
 async function getUser(req: Request, res: Response, next: NextFunction) {
   console.log("getUser");
   const response = await adapter.execute(UseCases.GetUser, req.params);
-  if (response.data.errCode) {
+  if (response?.data?.errCode) {
     return next(
       new AppError(response.status, response.data.errMsg, response.data.errCode)
     );
