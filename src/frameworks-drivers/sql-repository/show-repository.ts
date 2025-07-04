@@ -10,6 +10,7 @@ import { ErrorCode } from "../../constants";
 
 export class ShowRepository implements IRepository {
   async create(request: RequestModel): Promise<ResponseData> {
+    let show;
     try {
       const user = await dataManager.findOneBy(ShowUser, {
         id: request.showData.hostId
@@ -20,7 +21,8 @@ export class ShowRepository implements IRepository {
           "Host is not registered"
         );
       }
-      const show = this.instantiateShow(request);
+      show = this.instantiateShow(request);
+      show.host = user;
       await dataManager.upsert(Location, show.location, {
         conflictPaths: ["id"],
         skipUpdateIfNoValuesChanged: true
@@ -33,7 +35,7 @@ export class ShowRepository implements IRepository {
         "Failed to create show"
       );
     }
-    return new CreateShowResponseData(show.id);
+    return new CreateShowResponseData(show?.id);
   }
 
   async read(request: RequestModel): Promise<ResponseData> {
@@ -52,20 +54,18 @@ export class ShowRepository implements IRepository {
     const showData = request.showData;
 
     const location = new Location();
-    location.street = showData.address;
-    location.city = "dummy";
-    location.zipCode = "656545";
+    location.street = showData.street;
+    location.city = showData.city;
+    location.zipCode = showData.zipCode;
     location.id = getUuid([location.street, location.city, location.zipCode]);
 
     const show = new Show();
-    show.hostId = showData.hostId;
     show.startDate = showData.startDate;
     show.endDate = showData.endDate;
-    show.locationId = location.id;
     show.location = location;
     show.id = getUuid([
-      show.locationId,
-      show.hostId,
+      location.id,
+      showData.hostId,
       show.startDate,
       show.endDate
     ]);

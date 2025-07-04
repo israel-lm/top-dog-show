@@ -2,15 +2,20 @@ import { RequestModel, ResponseData, ListRequestData } from "./base-models";
 import { DogRegistrationSchema, ShowSchema } from "./validation-schemas";
 
 export class ShowData {
-  hostId: string;
-  address: string;
-  startDate: Date;
-  endDate: Date;
+  hostId?: string;
+  street?: string;
+  city?: string;
+  zipCode?: string;
+  address?: string;
+  startDate?: Date;
+  endDate?: Date;
 
   constructor(data: any) {
     const validatedData = ShowSchema.parse(data);
     this.hostId = validatedData.hostId;
-    this.address = validatedData.address;
+    this.street = validatedData.street;
+    this.city = validatedData.city;
+    this.zipCode = validatedData.zipCode;
     this.startDate = new Date(validatedData.startDate);
     this.endDate = new Date(validatedData.endDate);
   }

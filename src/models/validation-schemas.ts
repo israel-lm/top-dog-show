@@ -12,10 +12,12 @@ export const DogSchema = z.object({
 });
 
 export const ShowSchema = z.object({
-  hostId: z.string(),
-  address: z.string(),
-  startDate: z.iso.datetime(),
-  endDate: z.iso.datetime()
+  hostId: z.string().optional(),
+  street: z.string().optional(),
+  city: z.string().optional(),
+  zipCode: z.string().optional(),
+  startDate: z.iso.datetime().optional(),
+  endDate: z.iso.datetime().optional()
 });
 
 export const MarkSchema = z.object({

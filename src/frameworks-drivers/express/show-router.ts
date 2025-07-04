@@ -14,7 +14,7 @@ async function createShow(req: Request, res: Response, next: NextFunction) {
   const response = await adapter.execute(UseCases.CreateShow, req.body);
   if (response.data.errCode) {
     return next(
-      new AppError(response.status, response.errMsg, response.data.errCode)
+      new AppError(response.status, response.data.errMsg, response.data.errCode)
     );
   }
   res.status(201).json(response);
@@ -22,10 +22,11 @@ async function createShow(req: Request, res: Response, next: NextFunction) {
 
 async function updateShow(req: Request, res: Response, next: NextFunction) {
   console.log("updateShow");
+  req.body.showId = req.params.showId;
   const response = await adapter.execute(UseCases.UpdateShow, req.body);
   if (response.data.errCode) {
     return next(
-      new AppError(response.status, response.errMsg, response.data.errCode)
+      new AppError(response.status, response.data.errMsg, response.data.errCode)
     );
   }
   res.json(response);
@@ -33,10 +34,10 @@ async function updateShow(req: Request, res: Response, next: NextFunction) {
 
 async function deleteShow(req: Request, res: Response, next: NextFunction) {
   console.log("deleteShow");
-  const response = await adapter.execute(UseCases.DeleteShow, req.query);
-  if (response.data.errCode) {
+  const response = await adapter.execute(UseCases.DeleteShow, req.params);
+  if (response?.data?.errCode) {
     return next(
-      new AppError(response.status, response.errMsg, response.data.errCode)
+      new AppError(response.status, response.data.errMsg, response.data.errCode)
     );
   }
   res.status(204).json(response);
@@ -44,10 +45,10 @@ async function deleteShow(req: Request, res: Response, next: NextFunction) {
 
 async function getShow(req: Request, res: Response, next: NextFunction) {
   console.log("getShow");
-  const response = await adapter.execute(UseCases.GetShow, req.query);
+  const response = await adapter.execute(UseCases.GetShow, req.params);
   if (response.data.errCode) {
     return next(
-      new AppError(response.status, response.errMsg, response.data.errCode)
+      new AppError(response.status, response.data.errMsg, response.data.errCode)
     );
   }
   res.json(response);
@@ -58,7 +59,7 @@ async function listAllShows(req: Request, res: Response, next: NextFunction) {
   const response = await adapter.execute(UseCases.ListShows, req.query);
   if (response.data.errCode) {
     return next(
-      new AppError(response.status, response.errMsg, response.data.errCode)
+      new AppError(response.status, response.data.errMsg, response.data.errCode)
     );
   }
   res.json(response);
@@ -66,18 +67,11 @@ async function listAllShows(req: Request, res: Response, next: NextFunction) {
 
 async function registerDog(req: Request, res: Response, next: NextFunction) {
   console.log("registerDog");
-  const registrationData = {
-    showId: req.params.showId,
-    ...req.body
-  };
-
-  const response = await adapter.execute(
-    UseCases.RegisterDog,
-    registrationData
-  );
+  req.body.showId = req.params.showId;
+  const response = await adapter.execute(UseCases.RegisterDog, req.body);
   if (response.data.errCode) {
     return next(
-      new AppError(response.status, response.errMsg, response.data.errCode)
+      new AppError(response.status, response.data.errMsg, response.data.errCode)
     );
   }
   res.json(response);
