@@ -18,7 +18,8 @@ export class UpdateShowUseCase implements IUseCase {
     requestModel: RequestModel,
     repository: IRepository
   ): Promise<ResponseModel> {
-    return new ResponseModel("success", null);
+    const responseData = await repository.update(requestModel);
+    return buildResponseModel(responseData);
   }
 }
 

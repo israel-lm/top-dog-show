@@ -12,6 +12,7 @@ export const DogSchema = z.object({
 });
 
 export const ShowSchema = z.object({
+  showId: z.string().optional(),
   hostId: z.string().optional(),
   street: z.string().optional(),
   city: z.string().optional(),

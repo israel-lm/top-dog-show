@@ -14,7 +14,11 @@ app.use("/user", userRouter);
 app.use("/show", showRouter);
 
 app.all("*name", (req, res, next) => {
-  const err = new AppError("Fail", "Not found", ErrorCode.NotFoundErr);
+  const err = new AppError(
+    "Fail",
+    "Route does not exist",
+    ErrorCode.NotFoundErr
+  );
   next(err);
 });
 

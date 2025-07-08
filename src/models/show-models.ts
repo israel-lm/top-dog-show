@@ -2,6 +2,7 @@ import { RequestModel, ResponseData, ListRequestData } from "./base-models";
 import { DogRegistrationSchema, ShowSchema } from "./validation-schemas";
 
 export class ShowData {
+  showId?: string;
   hostId?: string;
   street?: string;
   city?: string;
@@ -12,12 +13,18 @@ export class ShowData {
 
   constructor(data: any) {
     const validatedData = ShowSchema.parse(data);
+    this.showId = validatedData.showId;
     this.hostId = validatedData.hostId;
     this.street = validatedData.street;
     this.city = validatedData.city;
     this.zipCode = validatedData.zipCode;
-    this.startDate = new Date(validatedData.startDate);
-    this.endDate = new Date(validatedData.endDate);
+    this.startDate = !validatedData.startDate
+      ? undefined
+      : new Date(validatedData.startDate);
+
+    this.endDate = !validatedData.endDate
+      ? undefined
+      : new Date(validatedData.endDate);
   }
 }
 
