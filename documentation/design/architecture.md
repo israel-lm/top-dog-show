@@ -2,18 +2,22 @@
 
 ## Layer Architecture
 
-![Layer Architecture](./top-dog-show-sw-architecture.png)
+![Layer Architecture](./sw-architecture.png)
 
 ## Domain Models
 
 ### User Models
 
-![User Models](./top-dog-show-data-model-user-entities.drawio.png)
+![User Models](./user-entities.png)
 
 ### Authentication Models
 
-![Auth Models](./top-dog-show-data-model-authentication-entities.drawio.png)
+![Auth Models](./authentication-entities.png)
 
 ### Competition Models
 
-![Competition Models](./top-dog-show-data-model-competition-entities.drawio.png)
+![Competition Models](./competition-entities.png)
+
+## DB Data Model
+
+![DB Models](./data-model.png)
