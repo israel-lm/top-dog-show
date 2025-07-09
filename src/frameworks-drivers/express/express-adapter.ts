@@ -14,6 +14,7 @@ import {
   CreateShowController,
   DeleteShowController,
   GetShowController,
+  ListCompetitorsController,
   ListShowsController,
   RegisterDogController,
   UpdateShowController
@@ -58,6 +59,7 @@ import {
   CreateShowRequestModel,
   DeleteShowRequestModel,
   GetShowRequestModel,
+  ListCompetitorsRequestModel,
   ListShowsRequestModel,
   RegisterDogRequestModel,
   ShowData,
@@ -223,6 +225,16 @@ export class ExpressAdapter implements IFrameworkAdapter {
         try {
           requestModel = new RegisterDogRequestModel(requestData);
           controller = new RegisterDogController();
+          repository = new ShowRepository();
+        } catch (err) {
+          return getInvalidDataObject();
+        }
+        break;
+
+      case UseCases.ListCompetitors:
+        try {
+          requestModel = new ListCompetitorsRequestModel(requestData.showId);
+          controller = new ListCompetitorsController();
           repository = new ShowRepository();
         } catch (err) {
           return getInvalidDataObject();

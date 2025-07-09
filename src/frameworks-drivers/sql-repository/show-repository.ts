@@ -6,6 +6,8 @@ import {
   DeleteShowRequestModel,
   GetShowRequestModel,
   GetShowResponseData,
+  ListCompetitorsRequestModel,
+  ListCompetitorsResponseData,
   ListShowsRequestModel,
   ListShowsResponseData,
   RegisterDogRequestModel,
@@ -21,6 +23,7 @@ import { ErrorCode } from "../../constants";
 import { ShowUser } from "../db-models/user";
 import { Dog } from "../db-models/dog";
 import { Participation } from "../db-models/participation";
+import { DogData } from "../../models/dog-models";
 
 export class ShowRepository implements IRepository {
   async create(request: RequestModel): Promise<ResponseData> {
@@ -96,74 +99,17 @@ export class ShowRepository implements IRepository {
         );
       }
 
-      return null;
+      return undefined;
     }
   }
 
   async read(request: RequestModel): Promise<ResponseData> {
     if (request instanceof GetShowRequestModel) {
-      let show;
-      try {
-        show = await dataManager.findOne(Show, {
-          where: { id: request.showId },
-          relations: { location: true, host: true }
-        });
-        if (!show) {
-          return buildErrorReponseData(ErrorCode.NotFoundErr, "Show not found");
-        }
-      } catch (err) {
-        console.error(err);
-        return buildErrorReponseData(
-          ErrorCode.UnknownErr,
-          "Failed to get show information"
-        );
-      }
-      const showData = new ShowData({
-        showId: show.id,
-        hostId: show.host.id,
-        street: show.location.street,
-        city: show.location.city,
-        zipCode: show.location.zipCode,
-        startDate: show.startDate.toISOString(),
-        endDate: show.endDate.toISOString()
-      });
-      return new GetShowResponseData(showData);
+      return this.getShow(request);
     } else if (request instanceof ListShowsRequestModel) {
-      const listData = request.listData;
-      let shows;
-      try {
-        shows = await dataManager
-          .createQueryBuilder(Show, "show")
-          .innerJoinAndSelect("show.location", "location")
-          .innerJoinAndSelect("show.host", "host")
-          .limit(listData.limit)
-          .offset(listData.offset)
-          .getMany();
-      } catch (err) {
-        console.error(err);
-        return buildErrorReponseData(
-          ErrorCode.UnknownErr,
-          "Failed to get show information"
-        );
-      }
-
-      let count = 0;
-      let showDataList = [];
-      for (const show of shows) {
-        console.log(show);
-        count++;
-        const showData = new ShowData({
-          showId: show.id,
-          hostId: show.host.id,
-          street: show.location.street,
-          city: show.location.city,
-          zipCode: show.location.zipCode,
-          startDate: show.startDate.toISOString(),
-          endDate: show.endDate.toISOString()
-        });
-        showDataList.push(showData);
-      }
-      return new ListShowsResponseData(showDataList, count);
+      return this.listShows(request);
+    } else if (request instanceof ListCompetitorsRequestModel) {
+      return this.listCompetitors(request);
     }
   }
 
@@ -281,6 +227,112 @@ export class ShowRepository implements IRepository {
     }
 
     return null;
+  }
+
+  private async listCompetitors(request: RequestModel): Promise<ResponseData> {
+    const showId = request.showId;
+    let registrations;
+
+    try {
+      registrations = await dataManager
+        .createQueryBuilder(Participation, "participation")
+        .where("show_id = :id", { id: showId })
+        .innerJoinAndSelect("participation.dog", "dog")
+        .innerJoinAndSelect("dog.owner", "owner")
+        .getMany();
+    } catch (err) {
+      console.error(err);
+      return buildErrorReponseData(
+        ErrorCode.UnknownErr,
+        "Failed to get dogs information"
+      );
+    }
+
+    let dogList = [];
+    let count = 0;
+    for (const registration of registrations) {
+      const dog = registration.dog;
+      count++;
+      const dogData = new DogData({
+        dogName: dog.name,
+        dogId: dog.id,
+        ownerFirstName: dog.owner.firstName,
+        ownerLastName: dog.owner.lastName,
+        gender: dog.gender,
+        weight: dog.weight,
+        ageInMonths: dog.ageInMonths
+      });
+      dogList.push(dogData);
+    }
+
+    return new ListCompetitorsResponseData(dogList, count);
+  }
+
+  private async getShow(request: RequestModel): Promise<ResponseData> {
+    let show;
+    try {
+      show = await dataManager.findOne(Show, {
+        where: { id: request.showId },
+        relations: { location: true, host: true }
+      });
+      if (!show) {
+        return buildErrorReponseData(ErrorCode.NotFoundErr, "Show not found");
+      }
+    } catch (err) {
+      console.error(err);
+      return buildErrorReponseData(
+        ErrorCode.UnknownErr,
+        "Failed to get show information"
+      );
+    }
+    const showData = new ShowData({
+      showId: show.id,
+      hostId: show.host.id,
+      street: show.location.street,
+      city: show.location.city,
+      zipCode: show.location.zipCode,
+      startDate: show.startDate.toISOString(),
+      endDate: show.endDate.toISOString()
+    });
+    return new GetShowResponseData(showData);
+  }
+
+  private async listShows(request: RequestModel): Promise<ResponseData> {
+    const listData = request.listData;
+    let shows;
+    try {
+      shows = await dataManager
+        .createQueryBuilder(Show, "show")
+        .innerJoinAndSelect("show.location", "location")
+        .innerJoinAndSelect("show.host", "host")
+        .limit(listData.limit)
+        .offset(listData.offset)
+        .getMany();
+    } catch (err) {
+      console.error(err);
+      return buildErrorReponseData(
+        ErrorCode.UnknownErr,
+        "Failed to get show information"
+      );
+    }
+
+    let count = 0;
+    let showDataList = [];
+    for (const show of shows) {
+      console.log(show);
+      count++;
+      const showData = new ShowData({
+        showId: show.id,
+        hostId: show.host.id,
+        street: show.location.street,
+        city: show.location.city,
+        zipCode: show.location.zipCode,
+        startDate: show.startDate.toISOString(),
+        endDate: show.endDate.toISOString()
+      });
+      showDataList.push(showData);
+    }
+    return new ListShowsResponseData(showDataList, count);
   }
 
   private async updateLocation(

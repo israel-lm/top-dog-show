@@ -69,6 +69,21 @@ async function registerDog(req: Request, res: Response, next: NextFunction) {
   console.log("registerDog");
   req.body.showId = req.params.showId;
   const response = await adapter.execute(UseCases.RegisterDog, req.body);
+  if (response?.data?.errCode) {
+    return next(
+      new AppError(response.status, response.data.errMsg, response.data.errCode)
+    );
+  }
+  res.status(201).json(response);
+}
+
+async function ListCompetitors(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  console.log("ListCompetitors");
+  const response = await adapter.execute(UseCases.ListCompetitors, req.params);
   if (response.data.errCode) {
     return next(
       new AppError(response.status, response.data.errMsg, response.data.errCode)
@@ -80,5 +95,6 @@ async function registerDog(req: Request, res: Response, next: NextFunction) {
 showRouter.route("/").get(listAllShows).post(createShow);
 showRouter.route("/:showId").get(getShow).patch(updateShow).delete(deleteShow);
 showRouter.route("/:showId/registration").post(registerDog);
+showRouter.route("/:showId/competitors").get(ListCompetitors);
 
 export default showRouter;

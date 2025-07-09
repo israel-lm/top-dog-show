@@ -23,6 +23,7 @@ export enum UseCases {
   GetShow,
   ListShows,
   RegisterDog,
+  ListCompetitors,
   RegisterResults,
   UpdateResults,
   DeleteResults,

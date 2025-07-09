@@ -1,4 +1,5 @@
 import { RequestModel, ResponseData, ListRequestData } from "./base-models";
+import { DogData } from "./dog-models";
 import { DogRegistrationSchema, ShowSchema } from "./validation-schemas";
 
 export class ShowData {
@@ -86,6 +87,15 @@ export class RegisterDogRequestModel extends RequestModel {
   }
 }
 
+export class ListCompetitorsRequestModel extends RequestModel {
+  showId: string;
+
+  constructor(showId: string) {
+    super();
+    this.showId = showId;
+  }
+}
+
 export class CreateShowResponseData extends ResponseData {
   showId: string;
 
@@ -118,6 +128,17 @@ export class ListShowsResponseData extends ResponseData {
   total: number;
 
   constructor(items: ShowData[], total: number) {
+    super();
+    this.items = items;
+    this.total = total;
+  }
+}
+
+export class ListCompetitorsResponseData extends ResponseData {
+  items: DogData[];
+  total: number;
+
+  constructor(items: DogData[], total: number) {
     super();
     this.items = items;
     this.total = total;

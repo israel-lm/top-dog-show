@@ -68,3 +68,13 @@ export class RegisterDogUseCase implements IUseCase {
     return buildResponseModel(responseData);
   }
 }
+
+export class ListCompetitorsUseCase implements IUseCase {
+  async execute(
+    requestModel: RequestModel,
+    repository: IRepository
+  ): Promise<ResponseModel> {
+    const responseData = await repository.read(requestModel);
+    return buildResponseModel(responseData);
+  }
+}
