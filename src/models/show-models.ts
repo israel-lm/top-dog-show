@@ -7,7 +7,6 @@ export class ShowData {
   street?: string;
   city?: string;
   zipCode?: string;
-  address?: string;
   startDate?: Date;
   endDate?: Date;
 

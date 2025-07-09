@@ -28,7 +28,8 @@ export class DeleteShowUseCase implements IUseCase {
     requestModel: RequestModel,
     repository: IRepository
   ): Promise<ResponseModel> {
-    return new ResponseModel("success", null);
+    const responseData = await repository.delete(requestModel);
+    return buildResponseModel(responseData);
   }
 }
 
@@ -37,7 +38,8 @@ export class GetShowUseCase implements IUseCase {
     requestModel: RequestModel,
     repository: IRepository
   ): Promise<ResponseModel> {
-    return new ResponseModel("success", null);
+    const responseData = await repository.read(requestModel);
+    return buildResponseModel(responseData);
   }
 }
 
@@ -46,7 +48,8 @@ export class ListShowsUseCase implements IUseCase {
     requestModel: RequestModel,
     repository: IRepository
   ): Promise<ResponseModel> {
-    return new ResponseModel("success", null);
+    const responseData = await repository.read(requestModel);
+    return buildResponseModel(responseData);
   }
 }
 
@@ -55,6 +58,13 @@ export class RegisterDogUseCase implements IUseCase {
     requestModel: RequestModel,
     repository: IRepository
   ): Promise<ResponseModel> {
-    return new ResponseModel("success", null);
+    let responseData;
+    if (requestModel.registerUnregister) {
+      responseData = await repository.create(requestModel);
+    } else {
+      responseData = await repository.delete(requestModel);
+    }
+
+    return buildResponseModel(responseData);
   }
 }

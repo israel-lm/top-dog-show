@@ -33,7 +33,4 @@ export class Dog {
 
   @ManyToOne(() => DogOwner, (owner) => owner.dogs)
   owner: Relation<DogOwner>;
-
-  // @OneToMany(() => RankAssociation, (association) => association.dog)
-  // rankAssociation: Relation<RankAssociation[]>;
 }

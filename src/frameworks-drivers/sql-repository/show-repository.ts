@@ -1,7 +1,15 @@
 import { IRepository } from "../../use-cases/repository-interface";
 import { RequestModel, ResponseData } from "../../models/base-models";
 import {
+  CreateShowRequestModel,
   CreateShowResponseData,
+  DeleteShowRequestModel,
+  GetShowRequestModel,
+  GetShowResponseData,
+  ListShowsRequestModel,
+  ListShowsResponseData,
+  RegisterDogRequestModel,
+  ShowData,
   UpdateShowResponseData
 } from "../../models/show-models";
 import { Show } from "../db-models/show";
@@ -11,39 +19,152 @@ import { Location } from "../db-models/location";
 import { Showshow } from "../db-models/show";
 import { ErrorCode } from "../../constants";
 import { ShowUser } from "../db-models/user";
+import { Dog } from "../db-models/dog";
+import { Participation } from "../db-models/participation";
 
 export class ShowRepository implements IRepository {
   async create(request: RequestModel): Promise<ResponseData> {
-    let show;
-    try {
-      const user = await dataManager.findOneBy(ShowUser, {
-        id: request.showData.hostId
-      });
-      if (!user) {
+    if (request instanceof CreateShowRequestModel) {
+      let show;
+      try {
+        const user = await dataManager.findOneBy(ShowUser, {
+          id: request.showData.hostId
+        });
+        if (!user) {
+          return buildErrorReponseData(
+            ErrorCode.NotFoundErr,
+            "Host is not registered"
+          );
+        }
+        show = this.instantiateShow(request);
+        show.host = user;
+        await dataManager.upsert(Location, show.location, {
+          conflictPaths: ["id"],
+          skipUpdateIfNoValuesChanged: true
+        });
+        await dataManager.insert(Show, show);
+      } catch (err) {
+        console.error(`Create show failed: ${err.driverError}`);
         return buildErrorReponseData(
-          ErrorCode.NotFoundErr,
-          "Host is not registered"
+          ErrorCode.UnknownErr,
+          "Failed to create show"
         );
       }
-      show = this.instantiateShow(request);
-      show.host = user;
-      await dataManager.upsert(Location, show.location, {
-        conflictPaths: ["id"],
-        skipUpdateIfNoValuesChanged: true
-      });
-      await dataManager.insert(Show, show);
-    } catch (err) {
-      console.error(`Create show failed: ${err.driverError}`);
-      return buildErrorReponseData(
-        ErrorCode.UnknownErr,
-        "Failed to create show"
-      );
+      return new CreateShowResponseData(show?.id);
+    } else if (request instanceof RegisterDogRequestModel) {
+      let dog = undefined;
+      let show = undefined;
+
+      try {
+        dog = await dataManager.findOneBy(Dog, { id: request.dogId });
+        if (!dog) {
+          return buildErrorReponseData(ErrorCode.NotFoundErr, "Dog not found");
+        }
+      } catch (err) {
+        console.error(err);
+        return buildErrorReponseData(
+          ErrorCode.UnknownErr,
+          "Failed to get dog information"
+        );
+      }
+
+      try {
+        show = await dataManager.findOneBy(Show, { id: request.showId });
+        if (!show) {
+          return buildErrorReponseData(ErrorCode.NotFoundErr, "Show not found");
+        }
+      } catch (err) {
+        console.error(err);
+        return buildErrorReponseData(
+          ErrorCode.UnknownErr,
+          "Failed to get show information"
+        );
+      }
+
+      const participation = new Participation();
+      participation.dog = dog;
+      participation.show = show;
+      participation.id = getUuid([dog.id, show.id]);
+
+      try {
+        await dataManager.insert(Participation, participation);
+      } catch (err) {
+        console.error(err);
+        return buildErrorReponseData(
+          ErrorCode.UnknownErr,
+          "Failed to register dog"
+        );
+      }
+
+      return null;
     }
-    return new CreateShowResponseData(show?.id);
   }
 
   async read(request: RequestModel): Promise<ResponseData> {
-    return new CreateShowResponseData("asdfasfkjasfasfasjfas");
+    if (request instanceof GetShowRequestModel) {
+      let show;
+      try {
+        show = await dataManager.findOne(Show, {
+          where: { id: request.showId },
+          relations: { location: true, host: true }
+        });
+        if (!show) {
+          return buildErrorReponseData(ErrorCode.NotFoundErr, "Show not found");
+        }
+      } catch (err) {
+        console.error(err);
+        return buildErrorReponseData(
+          ErrorCode.UnknownErr,
+          "Failed to get show information"
+        );
+      }
+      const showData = new ShowData({
+        showId: show.id,
+        hostId: show.host.id,
+        street: show.location.street,
+        city: show.location.city,
+        zipCode: show.location.zipCode,
+        startDate: show.startDate.toISOString(),
+        endDate: show.endDate.toISOString()
+      });
+      return new GetShowResponseData(showData);
+    } else if (request instanceof ListShowsRequestModel) {
+      const listData = request.listData;
+      let shows;
+      try {
+        shows = await dataManager
+          .createQueryBuilder(Show, "show")
+          .innerJoinAndSelect("show.location", "location")
+          .innerJoinAndSelect("show.host", "host")
+          .limit(listData.limit)
+          .offset(listData.offset)
+          .getMany();
+      } catch (err) {
+        console.error(err);
+        return buildErrorReponseData(
+          ErrorCode.UnknownErr,
+          "Failed to get show information"
+        );
+      }
+
+      let count = 0;
+      let showDataList = [];
+      for (const show of shows) {
+        console.log(show);
+        count++;
+        const showData = new ShowData({
+          showId: show.id,
+          hostId: show.host.id,
+          street: show.location.street,
+          city: show.location.city,
+          zipCode: show.location.zipCode,
+          startDate: show.startDate.toISOString(),
+          endDate: show.endDate.toISOString()
+        });
+        showDataList.push(showData);
+      }
+      return new ListShowsResponseData(showDataList, count);
+    }
   }
 
   async update(request: RequestModel): Promise<ResponseData> {
@@ -127,7 +248,39 @@ export class ShowRepository implements IRepository {
   }
 
   async delete(request: RequestModel): Promise<ResponseData> {
-    return new CreateShowResponseData("asdfasfkjasfasfasjfas");
+    if (request instanceof DeleteShowRequestModel) {
+      try {
+        const result = await dataManager.delete(Show, request.showId);
+        if (result.affected == 0) {
+          return buildErrorReponseData(ErrorCode.NotFoundErr, "Show not found");
+        }
+      } catch (err) {
+        console.error(err);
+        return buildErrorReponseData(
+          ErrorCode.UnknownErr,
+          "Failed to delete show information"
+        );
+      }
+    } else if (request instanceof RegisterDogRequestModel) {
+      try {
+        const id = getUuid([request.dogId, request.showId]);
+        const result = await dataManager.delete(Participation, id);
+        if (result.affected == 0) {
+          return buildErrorReponseData(
+            ErrorCode.NotFoundErr,
+            "Registration not found"
+          );
+        }
+      } catch (err) {
+        console.error(err);
+        return buildErrorReponseData(
+          ErrorCode.UnknownErr,
+          "Failed to delete registration"
+        );
+      }
+    }
+
+    return null;
   }
 
   private async updateLocation(
