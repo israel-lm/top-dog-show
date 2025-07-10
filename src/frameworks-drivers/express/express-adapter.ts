@@ -115,6 +115,16 @@ function instantiateShowData(request: any): ShowData | any {
 }
 
 export class ExpressAdapter implements IFrameworkAdapter {
+  private static instance: ExpressAdapter;
+
+  private constructor() {}
+
+  public static getInstance(): ExpressAdapter {
+    if (!ExpressAdapter.instance) {
+      ExpressAdapter.instance = new ExpressAdapter();
+    }
+    return ExpressAdapter.instance;
+  }
   async execute(useCaseId: UseCases, requestData: any): Promise<any> {
     let controller;
     let requestModel;

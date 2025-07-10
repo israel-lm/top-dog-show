@@ -18,7 +18,6 @@ import { Show } from "../db-models/show";
 import { buildErrorReponseData, getUuid } from "../../commons";
 import { dataManager } from "./data-source";
 import { Location } from "../db-models/location";
-import { Showshow } from "../db-models/show";
 import { ErrorCode } from "../../constants";
 import { ShowUser } from "../db-models/user";
 import { Dog } from "../db-models/dog";

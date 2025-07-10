@@ -5,7 +5,7 @@ import { UseCases } from "../../constants";
 import { ExpressAdapter } from "./express-adapter";
 import { AppError } from "./error-handler";
 
-const adapter = new ExpressAdapter();
+const adapter = ExpressAdapter.getInstance();
 
 const dogRouter = express.Router();
 
