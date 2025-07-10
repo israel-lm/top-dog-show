@@ -3,78 +3,36 @@ import { Request, Response, NextFunction } from "express";
 
 import { UseCases } from "../../constants";
 import { ExpressAdapter } from "./express-adapter";
-import { AppError } from "./error-handler";
+import { executeRequest } from "./router-commons";
 
 const adapter = ExpressAdapter.getInstance();
 
 const showRouter = express.Router();
 
 async function createShow(req: Request, res: Response, next: NextFunction) {
-  console.log("createShow");
-  const response = await adapter.execute(UseCases.CreateShow, req.body);
-  if (response.data.errCode) {
-    return next(
-      new AppError(response.status, response.data.errMsg, response.data.errCode)
-    );
-  }
-  res.status(201).json(response);
+  executeRequest(UseCases.CreateShow, 201, req.body, res, next);
 }
 
 async function updateShow(req: Request, res: Response, next: NextFunction) {
-  console.log("updateShow");
   req.body.showId = req.params.showId;
-  const response = await adapter.execute(UseCases.UpdateShow, req.body);
-  if (response.data.errCode) {
-    return next(
-      new AppError(response.status, response.data.errMsg, response.data.errCode)
-    );
-  }
-  res.json(response);
+  executeRequest(UseCases.UpdateShow, 200, req.body, res, next);
 }
 
 async function deleteShow(req: Request, res: Response, next: NextFunction) {
-  console.log("deleteShow");
-  const response = await adapter.execute(UseCases.DeleteShow, req.params);
-  if (response?.data?.errCode) {
-    return next(
-      new AppError(response.status, response.data.errMsg, response.data.errCode)
-    );
-  }
-  res.status(204).json(response);
+  executeRequest(UseCases.DeleteShow, 204, req.params, res, next);
 }
 
 async function getShow(req: Request, res: Response, next: NextFunction) {
-  console.log("getShow");
-  const response = await adapter.execute(UseCases.GetShow, req.params);
-  if (response.data.errCode) {
-    return next(
-      new AppError(response.status, response.data.errMsg, response.data.errCode)
-    );
-  }
-  res.json(response);
+  executeRequest(UseCases.GetShow, 200, req.params, res, next);
 }
 
 async function listAllShows(req: Request, res: Response, next: NextFunction) {
-  console.log("listAllShows");
-  const response = await adapter.execute(UseCases.ListShows, req.query);
-  if (response.data.errCode) {
-    return next(
-      new AppError(response.status, response.data.errMsg, response.data.errCode)
-    );
-  }
-  res.json(response);
+  executeRequest(UseCases.ListShows, 200, req.query, res, next);
 }
 
 async function registerDog(req: Request, res: Response, next: NextFunction) {
-  console.log("registerDog");
   req.body.showId = req.params.showId;
-  const response = await adapter.execute(UseCases.RegisterDog, req.body);
-  if (response?.data?.errCode) {
-    return next(
-      new AppError(response.status, response.data.errMsg, response.data.errCode)
-    );
-  }
-  res.status(201).json(response);
+  executeRequest(UseCases.RegisterDog, 201, req.body, res, next);
 }
 
 async function ListCompetitors(
@@ -82,14 +40,7 @@ async function ListCompetitors(
   res: Response,
   next: NextFunction
 ) {
-  console.log("ListCompetitors");
-  const response = await adapter.execute(UseCases.ListCompetitors, req.params);
-  if (response.data.errCode) {
-    return next(
-      new AppError(response.status, response.data.errMsg, response.data.errCode)
-    );
-  }
-  res.json(response);
+  executeRequest(UseCases.ListCompetitors, 200, req.params, res, next);
 }
 
 showRouter.route("/").get(listAllShows).post(createShow);

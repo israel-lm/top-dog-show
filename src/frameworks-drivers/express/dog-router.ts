@@ -3,64 +3,31 @@ import { Request, Response, NextFunction } from "express";
 
 import { UseCases } from "../../constants";
 import { ExpressAdapter } from "./express-adapter";
-import { AppError } from "./error-handler";
+import { executeRequest } from "./router-commons";
 
 const adapter = ExpressAdapter.getInstance();
 
 const dogRouter = express.Router();
 
 async function createDog(req: Request, res: Response, next: NextFunction) {
-  console.log(`createDog. Request data: ${JSON.stringify(req.body, null, 2)}`);
-  const response = await adapter.execute(UseCases.CreateDog, req.body);
-  if (response.data.errCode) {
-    return next(
-      new AppError(response.status, response.data.errMsg, response.data.errCode)
-    );
-  }
-  res.status(201).json(response);
+  executeRequest(UseCases.CreateDog, 201, req.body, res, next);
 }
 
 async function updateDog(req: Request, res: Response, next: NextFunction) {
-  console.log("updateDog");
   req.body.dogId = req.params.dogId;
-  const response = await adapter.execute(UseCases.UpdateDog, req.body);
-  if (response.data.errCode) {
-    return next(
-      new AppError(response.status, response.data.errMsg, response.data.errCode)
-    );
-  }
-  res.json(response);
+  executeRequest(UseCases.UpdateDog, 200, req.body, res, next);
 }
 
 async function deleteDog(req: Request, res: Response, next: NextFunction) {
-  console.log("deleteDog");
-  const response = await adapter.execute(UseCases.DeleteDog, req.params);
-  if (response?.data?.errCode) {
-    return next(
-      new AppError(response.status, response.data.errMsg, response.data.errCode)
-    );
-  }
-  res.status(204).json(response);
+  executeRequest(UseCases.DeleteDog, 204, req.params, res, next);
 }
 
 async function getDog(req: Request, res: Response, next: NextFunction) {
-  const response = await adapter.execute(UseCases.GetDog, req.params);
-  if (response.data.errCode) {
-    return next(
-      new AppError(response.status, response.data.errMsg, response.data.errCode)
-    );
-  }
-  res.json(response);
+  executeRequest(UseCases.GetDog, 200, req.params, res, next);
 }
 
 async function listAllDogs(req: Request, res: Response, next: NextFunction) {
-  const response = await adapter.execute(UseCases.ListDogs, req.query);
-  if (response.data.errCode) {
-    return next(
-      new AppError(response.status, response.data.errMsg, response.data.errCode)
-    );
-  }
-  res.json(response);
+  executeRequest(UseCases.ListDogs, 200, req.query, res, next);
 }
 
 dogRouter.route("/").get(listAllDogs).post(createDog);

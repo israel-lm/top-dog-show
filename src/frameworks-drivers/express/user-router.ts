@@ -4,65 +4,31 @@ import { Request, Response, NextFunction } from "express";
 import { UseCases } from "../../constants";
 import { ExpressAdapter } from "./express-adapter";
 import { AppError } from "./error-handler";
+import { executeRequest } from "./router-commons";
 
 const adapter = ExpressAdapter.getInstance();
 
 const userRouter = express.Router();
 
 async function createUser(req: Request, res: Response, next: NextFunction) {
-  console.log("createUser");
-  const response = await adapter.execute(UseCases.CreateUser, req.body);
-  if (response.data.errCode) {
-    return next(
-      new AppError(response.status, response.data.errMsg, response.data.errCode)
-    );
-  }
-  res.status(201).json(response);
+  executeRequest(UseCases.CreateUser, 201, req.body, res, next);
 }
 
 async function updateUser(req: Request, res: Response, next: NextFunction) {
-  console.log("updateUser");
   req.body.userId = req.params.userId;
-  const response = await adapter.execute(UseCases.UpdateUser, req.body);
-  if (response.data.errCode) {
-    return next(
-      new AppError(response.status, response.data.errMsg, response.data.errCode)
-    );
-  }
-  res.json(response);
+  executeRequest(UseCases.UpdateUser, 200, req.body, res, next);
 }
 
 async function deleteUser(req: Request, res: Response, next: NextFunction) {
-  console.log("deleteUser");
-  const response = await adapter.execute(UseCases.DeleteUser, req.params);
-  if (response.data?.errCode) {
-    return next(
-      new AppError(response.status, response.data.errMsg, response.data.errCode)
-    );
-  }
-  res.status(204).json(response);
+  executeRequest(UseCases.DeleteUser, 204, req.params, res, next);
 }
 
 async function getUser(req: Request, res: Response, next: NextFunction) {
-  console.log("getUser");
-  const response = await adapter.execute(UseCases.GetUser, req.params);
-  if (response?.data?.errCode) {
-    return next(
-      new AppError(response.status, response.data.errMsg, response.data.errCode)
-    );
-  }
-  res.json(response);
+  executeRequest(UseCases.GetUser, 200, req.params, res, next);
 }
 
 async function listAllUsers(req: Request, res: Response, next: NextFunction) {
-  console.log("listAllUsers");
-  const response = await adapter.execute(UseCases.ListUsers, req.query);
-  if (response.data.errCode) {
-    return next(
-      new AppError(response.status, response.data.errMsg, response.data.errCode)
-    );
-  }
-  res.json(response);
+  executeRequest(UseCases.ListUsers, 200, req.query, res, next);
 }
 
 userRouter.route("/").get(listAllUsers).post(createUser);

@@ -119,7 +119,7 @@ export class ExpressAdapter implements IFrameworkAdapter {
 
   private constructor() {}
 
-  public static getInstance(): ExpressAdapter {
+  static getInstance(): ExpressAdapter {
     if (!ExpressAdapter.instance) {
       ExpressAdapter.instance = new ExpressAdapter();
     }
